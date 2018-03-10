@@ -24,6 +24,29 @@ export function makeGetRequest(url, onSuccess, onError, onStart, onEnd) {
     });
 }
 
+export function makePutRequest(body, url, onSuccess, onError, onStart, onEnd) {
+    $.ajax({
+        url: url,
+        type: "PUT",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(body),
+        crossDomain: true,
+        beforeSend: function () {
+            if (onStart) onStart();
+        },
+        success: function (response) {
+            if (onSuccess) onSuccess(response);
+        },
+        error: function (error) {
+            if (onError) onError(error);
+        },
+        complete: function () {
+            if (onEnd) onEnd();
+        }
+    });
+}
+
 export function makePostRequest(body, url, onSuccess, onError, onStart, onEnd) {
     $.ajax({
         url: url,

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Link, Location } from 'react-router';
-import BreadCrumbs from "../components/common/Breadcrumbs";
+import BreadCrumbs from "../../components/common/Breadcrumbs";
 import {Clearfix, Col, Grid, Row} from "react-bootstrap";
-import SiteTemplateShort from "../components/partials/SiteTemplateShort";
-import {getAllSiteTemplates} from "../api/SiteTemplateRequests";
+import SiteTemplateShort from "../../components/partials/SiteTemplateShort";
+import {connect} from "react-redux";
+import {loadSiteTemplates} from "../../api/SiteTemplateRequests";
+import {Link} from "react-router-dom";
 
 const initialState = {
-    siteTemplates: [],
+
 };
 
 const breadCrumbsElements = [
@@ -19,10 +20,14 @@ class SiteTemplates extends Component {
         this.state = initialState;
     }
 
+    componentDidMount(){
+        loadSiteTemplates();
+    }
+
     renderRow = (templates) => {
         return (
             <Row>
-            {templates.map(template => <SiteTemplateShort template={template}/>)}
+            {templates.map(template => <SiteTemplateShort key={template.Id} template={template}/>)}
             </Row>)
     };
 
@@ -32,7 +37,7 @@ class SiteTemplates extends Component {
         let rows = [];
         let templates = [];
 
-        self.state.siteTemplates.forEach((template, index) => {
+        self.props.siteTemplates.forEach((template, index) => {
             templates.push(template);
             if (index % 4 === 3) {
                 rows.push(self.renderRow(templates));
@@ -48,6 +53,12 @@ class SiteTemplates extends Component {
             <div>
                 <BreadCrumbs pageTitle="Site Templates" elements={breadCrumbsElements}/>
                 <div className="wrapper wrapper-content animated fadeInRight">
+                    <Row>
+                        <Col lg={4}>
+                            <Link to={'/siteTemplates/create'} className="btn btn-primary"><i className="fa fa-plus-circle"/> Add new Template</Link>
+                        </Col>
+                    </Row>
+                    <br/>
                     {rows}
                 </div>
             </div>
@@ -56,4 +67,9 @@ class SiteTemplates extends Component {
 
 }
 
-export default SiteTemplates
+const mapStateToProps = (state) => (
+    {
+        siteTemplates: state.siteTemplates,
+    });
+
+export default connect(mapStateToProps)(SiteTemplates);

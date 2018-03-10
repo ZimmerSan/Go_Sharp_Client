@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "react-router";
+import {Link} from "react-router-dom";
 
 class BreadCrumbs extends React.Component {
     render() {
@@ -20,7 +20,6 @@ class BreadCrumbs extends React.Component {
                     </ol>
                 </div>
                 <div className="col-lg-2">
-
                 </div>
             </div>
         )

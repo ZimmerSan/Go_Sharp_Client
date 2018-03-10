@@ -1,6 +1,6 @@
 import React from 'react';
 import {Col} from "react-bootstrap";
-import {Link} from "react-router";
+import {Link} from "react-router-dom";
 
 class SiteTemplateShort extends React.Component {
     render() {
@@ -14,19 +14,19 @@ class SiteTemplateShort extends React.Component {
                         </div>
                         <div className="product-desc">
                             <span className="product-price">
-                                ${template.price}
+                                ${template.Price}
                             </span>
                             <small className="text-muted">
-                                {template.category}
+                                {template.Category}
                             </small>
-                            <Link to={'/siteTemplates/' + template.id} className="product-name">
-                                {template.title}
+                            <Link to={'/siteTemplates/' + template.Id} className="product-name">
+                                {template.Title}
                             </Link>
                             <div className="small m-t-xs">
-                                {template.shortDescription}
+                                {template.ShortDescription}
                             </div>
                             <div className="m-t text-righ">
-                                <Link to={'/siteTemplates/' + template.id} className="btn btn-xs btn-outline btn-primary">
+                                <Link to={'/siteTemplates/' + template.Id} className="btn btn-xs btn-outline btn-primary">
                                     Info <i className="fa fa-long-arrow-right"/>
                                 </Link>
                             </div>

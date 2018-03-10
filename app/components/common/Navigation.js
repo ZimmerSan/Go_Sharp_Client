@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Dropdown } from 'react-bootstrap';
-import { Link, Location } from 'react-router';
+import { Link } from 'react-router-dom';
 
 class Navigation extends Component {
 

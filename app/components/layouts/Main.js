@@ -4,6 +4,13 @@ import Navigation from '../common/Navigation';
 import Footer from '../common/Footer';
 import TopHeader from '../common/TopHeader';
 import { correctHeight, detectBody } from './Helpers';
+import {Redirect, Route, Switch} from "react-router-dom";
+
+import MainView from '../../views/Main';
+import SiteTemplatesView from '../../views/SiteTemplate/SiteTemplatesView';
+import SiteTemplateView from '../../views/SiteTemplate/SiteTemplateView';
+import SiteTemplateEditView from "../../views/SiteTemplate/SiteTemplateEditView";
+import SiteTemplateCreateView from "../../views/SiteTemplate/SiteTemplateCreateView";
 
 class Main extends React.Component {
 
@@ -18,7 +25,14 @@ class Main extends React.Component {
 
                     <TopHeader />
 
-                    {this.props.children}
+                    <Switch>
+                        <Route exact path="/" render={() => (<Redirect to="/main" />)} />
+                        <Route exact path="/main" component={MainView}/>
+                        <Route exact path="/siteTemplates" component={SiteTemplatesView}/>
+                        <Route exact path="/siteTemplates/create" component={SiteTemplateCreateView}/>
+                        <Route exact path="/siteTemplates/:id" component={SiteTemplateView}/>
+                        <Route exact path="/siteTemplates/:id/edit" component={SiteTemplateEditView}/>
+                    </Switch>
 
                     <Footer />
 

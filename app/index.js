@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, hashHistory } from 'react-router';
-import routes from './config/routes';
+import {createStore} from "redux";
+import reducer from "./reducers";
+import Root from "./config/routes";
 
 import jquery from 'jquery';
 import metismenu from 'metismenu';
@@ -12,7 +13,9 @@ import './../node_modules/font-awesome/css/font-awesome.css'
 import './../node_modules/animate.css/animate.min.css'
 import './../public/styles/style.css'
 
+export const store = createStore(reducer);
+
 ReactDOM.render(
-<Router history={hashHistory}>{routes}</Router>,
+    <Root store={store} />,
     document.getElementById('root')
 );

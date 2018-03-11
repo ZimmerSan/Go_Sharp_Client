@@ -7,7 +7,7 @@ var config = {
         app: [
             'webpack-dev-server/client?http://localhost:8000',
             'webpack/hot/only-dev-server',
-            './app/index'
+            './src/index'
         ],
         vendor: []
     },
@@ -38,7 +38,7 @@ var config = {
             {
                 test: /\.js$/,
                 loaders: ['react-hot-loader/webpack', 'babel'],
-                include: path.join(__dirname, 'app')
+                include: path.join(__dirname, 'src')
             },
             {
                 test: /\.css$/,

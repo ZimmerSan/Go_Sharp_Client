@@ -1,6 +1,7 @@
 import React from 'react';
 import {Redirect, Route, Switch} from "react-router-dom";
 import {LoginView} from "../../views/auth/LoginView";
+import {RegisterView} from "../../views/auth/RegisterView";
 
 class BlankLayout extends React.Component {
 
@@ -10,8 +11,8 @@ class BlankLayout extends React.Component {
                 <Switch>
                     <Route exact path="/login" component={LoginView}/>
                     <Route exact path="/login/" component={LoginView}/>
-                    <Route exact path="/register" component={LoginView}/>
-                    <Route exact path="/register/" component={LoginView}/>
+                    <Route exact path="/register" component={RegisterView}/>
+                    <Route exact path="/register/" component={RegisterView}/>
                 </Switch>
             </div>
         )

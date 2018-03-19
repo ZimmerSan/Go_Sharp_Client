@@ -19,7 +19,7 @@ class SiteTemplateShort extends React.Component {
                             <small className="text-muted">
                                 {template.category}
                             </small>
-                            <Link to={'/siteTemplates/' + template.Iid} className="product-name">
+                            <Link to={'/siteTemplates/' + template. id} className="product-name">
                                 {template.title}
                             </Link>
                             <div className="small m-t-xs">

@@ -1,10 +1,15 @@
 import { authHeader } from '../_helpers';
 import {BACKEND_URL, API_URL} from "./api";
 import jwt_decode from 'jwt-decode';
+import {authJsonHeader} from "../_helpers/auth-header";
+
+const URL = API_URL + 'accounts/users/';
 
 export const userService = {
     login,
+    register,
     logout,
+    updateRole,
     getAll
 };
 
@@ -46,6 +51,16 @@ function login(username, password) {
         });
 }
 
+function register(user) {
+    const requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(user)
+    };
+
+    return fetch(URL, requestOptions).then(handleResponse)
+}
+
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
@@ -57,7 +72,7 @@ function getAll() {
         headers: authHeader()
     };
 
-    return fetch('/users', requestOptions).then(handleResponse);
+    return fetch(URL, requestOptions).then(handleResponse);
 }
 
 function getOne(id) {
@@ -66,7 +81,23 @@ function getOne(id) {
         headers: authHeader()
     };
 
-    return fetch(API_URL + 'accounts/users/' + id, requestOptions).then(handleResponse);
+    return fetch(URL + id, requestOptions).then(handleResponse);
+}
+
+function updateRole(id, roles) {
+    const requestOptions = {
+        method: 'PUT',
+        body: JSON.stringify(roles),
+        headers: authJsonHeader()
+    };
+
+    return fetch(URL + id + '/roles', requestOptions).then(response => {
+        if (!response.ok) {
+            return Promise.reject(response.statusText);
+        }
+
+        return response;
+    });
 }
 
 function handleResponse(response) {

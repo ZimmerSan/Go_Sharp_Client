@@ -1,38 +1,66 @@
 import React, {Component} from 'react';
-import {Button, Modal} from "react-bootstrap";
-import {siteTemplateService} from "../../_services/site-template.service";
+import {Button, ControlLabel, FormControl, FormGroup, HelpBlock} from "react-bootstrap";
 import {history} from '../../_helpers'
+import DatePicker from 'react-16-bootstrap-date-picker';
+import {connect} from "react-redux";
+import {orderActions} from "../../_actions";
 
-export default class ConfirmCheckoutModal extends Component {
+class ConfirmCheckoutModal extends Component {
     constructor(props) {
         super(props);
+        this.state = {};
     }
 
     onSubmit = () => {
-        siteTemplateService
-            .deleteOne(this.props.template.id)
-            .then(history.push('/siteTemplates'));
+        let self = this;
+
+        let order = {
+            dueDate: self.state.date,
+            description: self.state.description,
+        };
+
+        this.props.dispatch(orderActions.create(order));
+        history.push('/');
+    };
+
+    changeDate = (date) => {
+        this.setState({
+            date: date
+        });
     };
 
     render() {
-        const {template} = this.props;
+        const {cart, loading} = this.props;
 
         return (
-        <div className="modal inmodal fade" id="confirmCheckoutModal" tabIndex="-1" role="dialog"  aria-hidden="true">
-            <div className="modal-dialog modal-sm">
-                <div className="modal-content">
+        <div className="modal inmodal" id="confirmCheckoutModal" tabIndex="-1" role="dialog"  aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content animated bounceInRight">
                     <div className="modal-header">
                         <button type="button" className="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span className="sr-only">Close</span></button>
-                        <i className="fa fa-warning modal-icon"/>
-                        <h4 className="modal-title">Confirm delete</h4>
+                        <i className="fa fa-laptop modal-icon"/>
+                        <h4 className="modal-title">Checkout</h4>
+                        <small className="font-bold">Please fill fields required for Order creation</small>
                     </div>
                     <div className="modal-body">
-                        <p>You are going to <strong>delete</strong> item <strong>{template.title}</strong>. Confirm the action please.</p>
+                        <FormGroup>
+                            <ControlLabel>Description</ControlLabel>
+                            <FormControl onChange={e => this.setState({description: e.target.value})}/>
+                        </FormGroup>
+                        <FormGroup>
+                            <ControlLabel>Due Date</ControlLabel>
+                            <DatePicker id="example-datepicker"
+                                        minDate={new Date().toISOString()}
+                                        dateFormat="DD/MM/YYYY"
+                                        value={this.state.date}
+                                        onChange={this.changeDate}
+                            />
+                        </FormGroup>
                     </div>
                     <div className="modal-footer">
                         <Button bsStyle="white" data-dismiss="modal">Cancel</Button>
-                        <Button bsStyle="danger" onClick={this.onSubmit}>
-                            <i className="fa fa-trash"/> Delete
+                        <Button bsStyle="primary" disabled={loading} onClick={this.onSubmit} data-dismiss="modal" >
+                            <i className="fa fa-dot-circle-o"/> Confirm Order
                         </Button>
                     </div>
                 </div>
@@ -41,3 +69,13 @@ export default class ConfirmCheckoutModal extends Component {
         );
     };
 }
+
+function mapStateToProps(state) {
+    const { loading, created_item } = state.orders;
+    return {
+        loading,
+        created_order: created_item
+    }
+}
+
+export default connect(mapStateToProps)(ConfirmCheckoutModal);

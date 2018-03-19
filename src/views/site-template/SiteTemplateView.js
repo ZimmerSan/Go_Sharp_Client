@@ -17,8 +17,8 @@ class SiteTemplate extends Component {
     }
 
     addToCart = () => {
-        const {dispatch, template} = this.props;
-        dispatch(cartActions.addItem(template.id));
+        const {dispatch, siteTemplate} = this.props;
+        dispatch(cartActions.addItem(siteTemplate.id));
     };
 
     render() {

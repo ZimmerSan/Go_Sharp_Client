@@ -44,8 +44,19 @@ class Navigation extends Component {
                             Go#
                         </div>
                     </li>
-                    <li className={this.activeRoute("/main")}>
-                        <Link to="/main"><i className="fa fa-th-large"></i> <span className="nav-label">Main view</span></Link>
+                    <li className={this.activeRoute("/dashboard")}>
+                        <Link to="/dashboard"><i className="fa fa-th-large"/> <span className="nav-label">Dashboard</span>  <span className="fa arrow"/></Link>
+                        <ul className="nav nav-second-level collapse">
+                            <li className={this.activeRoute("/dashboard/orders")}>
+                                <Link to="/dashboard/orders">Orders</Link>
+                            </li>
+                            <li className={this.activeRoute("/dashboard/projects")}>
+                                <Link to="/dashboard/projects">Projects</Link>
+                            </li>
+                        </ul>
+                    </li>
+                    <li className={this.activeRoute("/users")}>
+                        <Link to="/users"><i className="fa fa-users"></i> <span className="nav-label">Users</span></Link>
                     </li>
                     <li className={this.activeRoute("/siteTemplates")}>
                         <Link to="/siteTemplates"><i className="fa fa-desktop"></i> <span className="nav-label">Site Templates</span></Link>

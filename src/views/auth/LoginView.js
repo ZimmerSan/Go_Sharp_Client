@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {userActions} from "../../_actions/user.actions";
 import {FormGroup, HelpBlock} from "react-bootstrap";
 import {connect} from "react-redux";
+import {Link} from "react-router-dom";
 
 class LoginView extends Component {
     constructor(props) {
@@ -86,7 +87,7 @@ class LoginView extends Component {
                                 <p className="text-muted text-center">
                                     <small>Do not have an account?</small>
                                 </p>
-                                <a className="btn btn-sm btn-white btn-block" href="register.html">Create an account</a>
+                                <Link to={'/register'} className="btn btn-sm btn-white btn-block">Create an account</Link>
                             </form>
                         </div>
                     </div>

@@ -9,7 +9,8 @@ var config = {
             'webpack/hot/only-dev-server',
             './src/index'
         ],
-        vendor: []
+        vendor: [
+        ]
     },
     devtool: 'source-map',
     output: {

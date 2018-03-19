@@ -4,6 +4,7 @@ import {Col, Row} from "react-bootstrap";
 import {connect} from "react-redux";
 import {cartActions} from "../_actions/cart.actions";
 import {Link} from "react-router-dom";
+import ConfirmCheckoutModal from "../_components/partials/ConfirmCheckoutModal";
 
 class ShoppingCartView extends Component {
     constructor(props) {
@@ -29,8 +30,10 @@ class ShoppingCartView extends Component {
         else
         return (
             <div>
+                <ConfirmCheckoutModal cart={cart}/>
+
                 <BreadCrumbs pageTitle="Shopping Cart" elements={breadCrumbsElements}/>
-                <div className="wrapper wrapper-content animated fadeInRight">
+                <div className="wrapper wrapper-content animated fadeIn">
                     <Row>
                         <Col md={9}>
                             <div className="ibox">
@@ -86,7 +89,9 @@ class ShoppingCartView extends Component {
                                     </div>
                                 ))}
                                 <div className="ibox-content">
-                                    <button className="btn btn-primary pull-right"><i className="fa fa fa-shopping-cart"></i> Checkout</button>
+                                    <button className="btn btn-primary pull-right" data-toggle="modal" data-target="#confirmCheckoutModal">
+                                        <i className="fa fa fa-shopping-cart"></i> Checkout
+                                    </button>
                                     <Link to={"/siteTemplates"} className="btn btn-white"><i className="fa fa-arrow-left"></i> Continue shopping</Link>
                                 </div>
                             </div>
@@ -108,7 +113,9 @@ class ShoppingCartView extends Component {
                                     <hr/>
                                     <div className="m-t-sm">
                                         <div className="btn-group">
-                                            <a href="#" className="btn btn-primary btn-sm"><i className="fa fa-shopping-cart"></i> Checkout</a>
+                                            <button className="btn btn-primary btn-sm" data-toggle="modal" data-target="#confirmCheckoutModal">
+                                                <i className="fa fa-shopping-cart"></i> Checkout
+                                            </button>
                                             <Link to="/siteTemplates" className="btn btn-white btn-sm"> Cancel</Link>
                                         </div>
                                     </div>

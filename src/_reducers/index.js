@@ -4,13 +4,17 @@ import { authentication } from './authentication.reducer'
 import { users } from './users.reducer'
 import { alert } from './alert.reducer'
 import {cart} from "./cart.reducer";
+import {orders} from "./orders.reducer";
+import {projects} from "./projects.reducer";
 
 const RootReducer = combineReducers({
     authentication,
     users,
     alert,
     cart,
-    siteTemplates
+    siteTemplates,
+    orders,
+    projects
 });
 
 export default RootReducer

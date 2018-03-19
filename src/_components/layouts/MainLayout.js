@@ -6,13 +6,15 @@ import TopHeader from '../common/TopHeader';
 import { correctHeight, detectBody } from './Helpers';
 import {Redirect, Route, Switch} from "react-router-dom";
 
-import MainView from '../../views/Main';
-import SiteTemplatesView from '../../views/SiteTemplate/SiteTemplatesView';
-import SiteTemplateView from '../../views/SiteTemplate/SiteTemplateView';
-import SiteTemplateEditView from "../../views/SiteTemplate/SiteTemplateEditView";
-import SiteTemplateCreateView from "../../views/SiteTemplate/SiteTemplateCreateView";
-import {connect} from "react-redux";
+import OrdersView from '../../views/dashboard/OrdersView';
+import SiteTemplatesView from '../../views/site-template/SiteTemplatesView';
+import SiteTemplateView from '../../views/site-template/SiteTemplateView';
+import SiteTemplateEditView from "../../views/site-template/SiteTemplateEditView";
+import SiteTemplateCreateView from "../../views/site-template/SiteTemplateCreateView";
 import ShoppingCartView from "../../views/ShoppingCartView";
+import ProjectsView from "../../views/dashboard/ProjectsView";
+import ProjectDetailsView from "../../views/dashboard/ProjectDetailsView";
+import UsersView from "../../views/user/UsersView";
 
 class MainLayout extends React.Component {
 
@@ -27,12 +29,23 @@ class MainLayout extends React.Component {
                     <TopHeader/>
 
                     <Switch>
-                        <Route exact path="/" render={() => (<Redirect to="/main" />)} />
-                        <Route exact path="/main" component={MainView}/>
+                        <Route exact path="/" render={() => (<Redirect to="/siteTemplates"/>)} />
+
+                        <Route exact path="/dashboard" render={() => (<Redirect to="/dashboard/orders"/>)}/>
+                        <Route exact path="/dashboard/orders" component={OrdersView}/>
+                        <Route exact path="/dashboard/orders/" component={OrdersView}/>
+                        <Route exact path="/dashboard/projects" component={ProjectsView}/>
+                        <Route exact path="/dashboard/projects/" component={ProjectsView}/>
+                        <Route exact path="/dashboard/projects/:id" component={ProjectDetailsView}/>
+
+                        <Route exact path="/users" component={UsersView}/>
+                        <Route exact path="/users/" component={UsersView}/>
+
                         <Route exact path="/siteTemplates" component={SiteTemplatesView}/>
                         <Route exact path="/siteTemplates/create" component={SiteTemplateCreateView}/>
                         <Route exact path="/siteTemplates/:id" component={SiteTemplateView}/>
                         <Route exact path="/siteTemplates/:id/edit" component={SiteTemplateEditView}/>
+
                         <Route exact path="/cart" component={ShoppingCartView}/>
                         <Route exact path="/cart/" component={ShoppingCartView}/>
                     </Switch>

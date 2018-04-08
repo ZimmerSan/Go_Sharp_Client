@@ -34,7 +34,10 @@ export const Role = {
 };
 
 export const ROLES = [
-    Role.Admin, Role.Developer, Role.Manager, Role.Customer
+    Role.Admin,
+    Role.Developer,
+    Role.Manager,
+    Role.Customer
 ];
 
 export const StatusLabelStyle = {

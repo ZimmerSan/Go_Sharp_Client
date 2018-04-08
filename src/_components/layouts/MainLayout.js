@@ -15,6 +15,9 @@ import ShoppingCartView from "../../views/ShoppingCartView";
 import ProjectsView from "../../views/dashboard/ProjectsView";
 import ProjectDetailsView from "../../views/dashboard/ProjectDetailsView";
 import UsersView from "../../views/user/UsersView";
+import {PrivateRoute} from "../PrivateRoute";
+import UserInfoView from "../../views/user/UserInfoView";
+import UserEditView from "../../views/user/UserEditView";
 
 class MainLayout extends React.Component {
 
@@ -38,8 +41,9 @@ class MainLayout extends React.Component {
                         <Route exact path="/dashboard/projects/" component={ProjectsView}/>
                         <Route exact path="/dashboard/projects/:id" component={ProjectDetailsView}/>
 
-                        <Route exact path="/users" component={UsersView}/>
-                        <Route exact path="/users/" component={UsersView}/>
+                        <PrivateRoute exact path="/users" component={UsersView} allowedRoles={'Admin'}/>
+                        <Route exact path="/users/:id" component={UserInfoView}/>
+                        <Route exact path="/users/:id/edit" component={UserEditView}/>
 
                         <Route exact path="/siteTemplates" component={SiteTemplatesView}/>
                         <Route exact path="/siteTemplates/create" component={SiteTemplateCreateView}/>

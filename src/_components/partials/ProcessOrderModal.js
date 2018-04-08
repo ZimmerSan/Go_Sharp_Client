@@ -52,8 +52,13 @@ class ProcessOrderModal extends Component {
         };
 
         projectService.create(project).then(
-            history.push('/')
+            history.push('/dashboard/projects')
         );
+    };
+
+    setDevelopers = e => {
+        let array = [].slice.call(e.target.selectedOptions).map(o => ({id: o.value}));
+        this.setState({developersTeam: array});
     };
 
     render() {
@@ -85,9 +90,7 @@ class ProcessOrderModal extends Component {
                                 </FormGroup>
                                 <FormGroup>
                                     <ControlLabel>Developers' team</ControlLabel>
-                                    <FormControl componentClass="select"
-                                                 onChange={(e) => self.setState({developersTeam: [].slice.call(e.target.selectedOptions).map(o => ({id: o.value}))})}
-                                                 multiple>
+                                    <FormControl componentClass="select" onChange={self.setDevelopers} multiple>
                                         {self.state.developers.map(manager => <option key={manager.id} value={manager.id}>{manager.fullName}</option>)}
                                     </FormControl>
                                 </FormGroup>

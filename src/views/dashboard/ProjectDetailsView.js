@@ -4,10 +4,12 @@ import IboxTools from "../../_components/common/IboxTools";
 import {projectActions} from "../../_actions";
 import {connect} from "react-redux";
 import ProcessOrderModal from "../../_components/partials/ProcessOrderModal";
-import {StatusLabelStyle} from "../../constants";
+import {Role, Status, StatusLabelStyle} from "../../constants";
 import BreadCrumbs from "../../_components/common/Breadcrumbs";
 import {Link} from "react-router-dom";
 import CreateTaskModal from "../../_components/partials/CreateTaskModal";
+import {checkRole} from "../../_helpers/index";
+import {workItemService} from "../../_services/work-item.service";
 
 const initialState = {
     showCreateTaskModal: false
@@ -20,9 +22,10 @@ class ProjectDetailsView extends Component {
     }
 
     componentDidMount(){
-        this.props.dispatch(projectActions.findOne(this.props.match.params.id));
-        $('.pie').peity('pie');
+        this.load();
     }
+
+    load = () => this.props.dispatch(projectActions.findOne(this.props.match.params.id));
 
     showModal = (stateParam) => {
         this.setState({
@@ -34,8 +37,16 @@ class ProjectDetailsView extends Component {
         this.setState({ [stateParam]: false });
     };
 
+    completeTask = (entity) => {
+        entity.status = Status.Completed;
+        workItemService.updateOne(entity).then(() => this.load())
+    };
+
     render() {
         let self = this;
+
+        const {user} = this.props;
+
         const project = self.props.project ? self.props.project : {};
 
         let breadCrumbsElements = [
@@ -64,9 +75,9 @@ class ProjectDetailsView extends Component {
                                         <div className="row">
                                             <div className="col-lg-12">
                                                 <div className="m-b-md">
-                                                    <Link to={'/dashboard/projects/' + project.id + '/edit'}
-                                                          className="btn btn-white btn-xs pull-right">Edit
-                                                        project</Link>
+                                                    {/*<Link to={'/dashboard/projects/' + project.id + '/edit'}*/}
+                                                          {/*className="btn btn-white btn-xs pull-right">Edit*/}
+                                                        {/*project</Link>*/}
                                                     <h2>{project.name}</h2>
                                                 </div>
                                                 <dl className="dl-horizontal">
@@ -101,9 +112,18 @@ class ProjectDetailsView extends Component {
                                                     <dt>Developers:</dt>
                                                     <dd className="project-people">
                                                         {project.developers.map(dev => [
-                                                            <Link to={'/users/' + dev.id} className="text-navy">
-                                                                <img alt="image" className="img-circle" src="/img/a6.jpg"/>
-                                                            </Link>,
+                                                            <span className="img-circle profile-image-circle" style={{
+                                                                backgroundImage: `url(${dev.imageUrl ? dev.imageUrl : '/img/a2.jpg'})`,
+                                                                width: '32px',
+                                                                height: '32px'
+                                                            }}>
+                                                            <Link to={'/users/' + dev.id} style={{
+                                                                display: 'block',
+                                                                width: '32px',
+                                                                height: '32px'
+                                                            }}>
+                                                            </Link>
+                                                        </span>,
                                                             ' '
                                                         ])}
                                                     </dd>
@@ -140,9 +160,16 @@ class ProjectDetailsView extends Component {
                                                                 
                                                                 <div className="m-t-md">
                                                                     <div className="pull-right">
-                                                                        <button type="button" className="btn btn-sm btn-white" onClick={() => this.showModal('showCreateTaskModal')}> <i className="fa fa-pencil"></i> Add Task</button>
+                                                                        {
+                                                                            (checkRole(user.roles, [Role.Admin])
+                                                                            || (checkRole(user.roles, [Role.Manager]) && user.id === project.projectManager.id)) &&
+                                                                            <button type="button" className="btn btn-sm btn-white"
+                                                                                    onClick={() => this.showModal('showCreateTaskModal')}>
+                                                                                <i className="fa fa-pencil"></i> Add Task
+                                                                            </button>
+                                                                        }
                                                                     </div>
-                                                                    <strong>Found 61 issues.</strong>
+                                                                    <strong>Found {(project && project.workItems) ? project.workItems.length : 0} issues.</strong>
                                                                 </div>
                                                                 <br/>
                                                                 <table className="table table-hover issue-tracker">
@@ -174,7 +201,7 @@ class ProjectDetailsView extends Component {
                                                                             {wi.estimatedTime}h
                                                                         </td>
                                                                         <td className="text-right">
-                                                                            <button className="btn btn-white btn-xs"> Assign</button>
+                                                                            <button className="btn btn-white btn-xs" onClick={() => this.completeTask(wi)}> Complete</button>
                                                                         </td>
                                                                     </tr>
                                                                     )}
@@ -283,9 +310,11 @@ class ProjectDetailsView extends Component {
 
 let mapStateToProps = (state) => {
     const { projects } = state;
+    const {user} = state.authentication;
 
     return {
-        project: projects.item
+        project: projects.item,
+        user,
     }
 };
 

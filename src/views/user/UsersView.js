@@ -38,7 +38,7 @@ class UsersView extends Component {
     render() {
         let self = this;
 
-        const {isLoading, users, error}  = self.props;
+        const {isLoading, users, error} = self.props;
 
         let cards = [];
         if (users) {
@@ -47,7 +47,16 @@ class UsersView extends Component {
                     <div className="contact-box center-version">
                         <Link to={'/users/' + u.id}>
                             <div className="text-center">
-                                <img alt="image" className="img-circle" src="img/a2.jpg"/>
+                                {u.imageUrl
+                                    ? <div
+                                        className="profile-image-circle img-circle"
+                                        style={{
+                                            backgroundImage: `url(${u.imageUrl})`,
+                                            height: '80px',
+                                            width: '80px',
+                                        }}/>
+                                    : <img alt="image" className="img-circle" src="/img/a2.jpg"/>
+                                }
                                 <h3 className="m-b-xs text-navy"><strong>{u.fullName}</strong></h3>
                                 <h4 className="font-bold">{u.roles.join(', ')}</h4>
                                 <p>
@@ -64,9 +73,9 @@ class UsersView extends Component {
                                     Info <i className="fa fa-long-arrow-right"/>
                                 </Link>
                                 {' '}
-                                <button className="btn btn-xs btn-outline btn-success" onClick={() => this.showModal(u)}>
+                                <Link to={`/users/${u.id}/edit`} className="btn btn-xs btn-outline btn-success">
                                     <i className="fa fa-gear"/> Edit
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>

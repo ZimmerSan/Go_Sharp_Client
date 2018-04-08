@@ -9,9 +9,9 @@ class SiteTemplateShort extends React.Component {
             <Col md={3}>
                 <div className="ibox">
                     <div className="ibox-content product-box">
-                        <div className="product-imitation">
-                            [ INFO ]
-                        </div>
+                        {template.imageUrl
+                            ? <img src={template.imageUrl} style={{maxWidth: '245.25px'}}/>
+                            : <div className="product-imitation">[ INFO ]</div>}
                         <div className="product-desc">
                             <span className="product-price">
                                 ${template.price}

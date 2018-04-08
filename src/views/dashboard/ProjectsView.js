@@ -4,7 +4,7 @@ import IboxTools from "../../_components/common/IboxTools";
 import {projectActions} from "../../_actions";
 import {connect} from "react-redux";
 import ProcessOrderModal from "../../_components/partials/ProcessOrderModal";
-import {StatusLabelStyle} from "../../constants";
+import {Role, StatusLabelStyle} from "../../constants";
 import BreadCrumbs from "../../_components/common/Breadcrumbs";
 import {Link} from "react-router-dom";
 
@@ -34,7 +34,16 @@ class ProjectsView extends Component {
     };
 
     render() {
-        const { projects } = this.props;
+        let projects = this.props.projects ? this.props.projects : [];
+        const { user } = this.props;
+
+        let roles = user.roles ? user.roles : [Role.Customer];
+
+        if (roles.includes(Role.Customer)) {
+            projects = projects.filter(o => o.order.customer.id === user.id);
+        } else if (roles.includes(Role.Developer)) {
+            projects = projects.filter(proj => proj.developers.map(e => e.id).includes(user.id));
+        }
 
         let breadCrumbsElements = [
             {link: '/dashboard', name: 'Dashboard'},
@@ -45,83 +54,88 @@ class ProjectsView extends Component {
         return ([
             breadCrumbs,
             <div className="wrapper wrapper-content animated fadeIn">
-                <div className="ibox-content m-b-sm border-bottom">
-                    <div className="row">
-                        <div className="col-sm-7">
-                            <div className="form-group">
-                                <label className="control-label" htmlFor="project_name">Project Name</label>
-                                <input type="text" id="project_name" name="project_name" value="" placeholder="Project Name" className="form-control"/>
-                            </div>
-                        </div>
-
-                        <div className="col-sm-3">
-                            <div className="form-group">
-                                <label className="control-label" htmlFor="customer">Manager</label>
-                                <input type="text" id="customer" name="customer" value="" placeholder="Manager" className="form-control"/>
-                            </div>
-                        </div>
-
-                        <div className="col-sm-2">
-                            <div className="form-group">
-                                <label className="control-label" htmlFor="status">Project Status</label>
-                                <input type="text" id="status" name="status" value="" placeholder="Status" className="form-control"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 {projects &&
                 <Row>
                     <Col lg={12}>
                         <div className="ibox">
                             <div className="ibox-title">
                                 <h5>All projects assigned to this account</h5>
-                                <div className="ibox-tools">
-                                    <a href="" className="btn btn-primary btn-xs">Create new project</a>
-                                </div>
                             </div>
                             <div className="ibox-content">
-                                <div className="project-list">
+                                {projects && projects[0]
+                                    ? <div className="project-list">
                                     <table className="table table-hover">
                                         <tbody>
-                                        {projects.map(o => (
-                                            <tr>
+                                        {projects.map(project => {
+                                            let progress = project.id ?
+                                                100 * (new Date().getTime() - new Date(project.createdDate).getTime()) / (new Date(project.dueDate).getTime() - new Date(project.createdDate).getTime())
+                                                : 1;
+
+                                            progress = progress < 0 ? 0 : progress > 100 ? 100 : progress.toFixed(2);
+
+                                            return <tr>
                                                 <td className="project-status">
-                                                    <span className={'label ' + StatusLabelStyle[o.projectStatus]}>{o.projectStatus}</span>
+                                                    <span
+                                                        className={'label ' + StatusLabelStyle[project.projectStatus]}>{project.projectStatus}</span>
                                                 </td>
                                                 <td className="project-title">
-                                                    <Link to={'/dashboard/projects/' + o.id}>{o.name}</Link>
+                                                    <Link to={'/dashboard/projects/' + project.id}>{project.name}</Link>
                                                     <br/>
-                                                    <small>Created {(new Date(o.createdDate)).toISOString().slice(0,10).replace(/-/g,"/")}</small>
+                                                    <small>
+                                                        Created {(new Date(project.createdDate)).toISOString().slice(0, 10).replace(/-/g, "/")}</small>
                                                 </td>
                                                 <td className="project-completion">
-                                                    <small>Completion with: 48%</small>
+                                                    <small>Completion with: {progress}%</small>
                                                     <div className="progress progress-mini">
-                                                        <div style={{width: 48+'%'}} className="progress-bar"></div>
+                                                        <div style={{width: progress + '%'}} className="progress-bar"></div>
                                                     </div>
                                                 </td>
                                                 <td className="project-people">
-                                                    <Link to={'/users/' + o.projectManager.id}>
-                                                        <img alt="image" className="img-circle" src="/img/a6.jpg"/>
-                                                    </Link>
+                                                    <span className="img-circle profile-image-circle" style={{
+                                                        backgroundImage: `url(${project.projectManager.imageUrl
+                                                            ? project.projectManager.imageUrl
+                                                            : '/img/a6.jpg'})`,
+                                                        width: '36px',
+                                                        height: '36px'
+                                                    }}>
+                                                            <Link to={'/users/' + project.projectManager.id} style={{
+                                                                display: 'block',
+                                                                width: '36px',
+                                                                height: '36px'
+                                                            }}>
+                                                            </Link>
+                                                    </span>
                                                 </td>
                                                 <td className="project-people">
-                                                    {o.developers.map(dev => [
-                                                        <Link to={'/users/' + dev.id}>
-                                                            <img alt="image" className="img-circle" src="/img/a2.jpg"/>
-                                                        </Link>,
+                                                    {project.developers.map(dev => [
+                                                        <span className="img-circle profile-image-circle" style={{
+                                                            backgroundImage: `url(${dev.imageUrl ? dev.imageUrl : '/img/a2.jpg'})`,
+                                                            width: '36px',
+                                                            height: '36px'
+                                                        }}>
+                                                            <Link to={'/users/' + dev.id} style={{
+                                                                display: 'block',
+                                                                width: '36px',
+                                                                height: '36px'
+                                                            }}>
+                                                            </Link>
+                                                        </span>,
                                                         ' '
                                                     ])}
                                                 </td>
                                                 <td className="project-actions">
-                                                    <Link to={'/dashboard/projects/' + o.id} className="btn btn-white btn-sm"><i className="fa fa-folder"></i> View </Link>{' '}
-                                                    <a href="#" className="btn btn-white btn-sm"><i className="fa fa-pencil"></i> Edit </a>{' '}
+                                                    <Link to={'/dashboard/projects/' + project.id}
+                                                          className="btn btn-white btn-sm"><i
+                                                        className="fa fa-folder"></i> View </Link>{' '}
                                                 </td>
                                             </tr>
-                                        ))}
+                                        })}
                                         </tbody>
                                     </table>
-                                </div>
+                                    </div>
+
+                                    : <div className="text-center">Seems like you have no Projects...</div>
+                                }
                             </div>
                         </div>
                     </Col>
@@ -136,9 +150,11 @@ class ProjectsView extends Component {
 
 let mapStateToProps = (state) => {
     const { projects } = state;
+    const { user } = state.authentication;
 
     return {
-        projects: projects.items
+        projects: projects.items,
+        user
     }
 };
 

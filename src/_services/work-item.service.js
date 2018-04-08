@@ -10,6 +10,7 @@ export const workItemService = {
     create,
     changeStatus,
     findAll,
+    updateOne,
 };
 
 function findOne(id) {
@@ -29,6 +30,16 @@ function create(entity) {
     };
 
     return fetch(URL, requestOptions).then(handleResponse);
+}
+
+function updateOne(entity) {
+    const requestOptions = {
+        method: 'PUT',
+        body: JSON.stringify(entity),
+        headers: authJsonHeader()
+    };
+
+    return fetch(URL + entity.id, requestOptions).then(handleResponse);
 }
 
 function changeStatus(id, status) {

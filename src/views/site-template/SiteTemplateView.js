@@ -6,6 +6,8 @@ import {siteTemplateActions} from "../../_actions/site-template.actions";
 import ConfirmDeleteModal from "../../_components/partials/ConfirmDeleteModal";
 import {Link} from "react-router-dom";
 import {cartActions} from "../../_actions/cart.actions";
+import {checkRole} from "../../_helpers/index";
+import {Role} from "../../constants";
 
 class SiteTemplate extends Component {
     constructor(props) {
@@ -24,7 +26,7 @@ class SiteTemplate extends Component {
     render() {
         let self = this;
 
-        const {isLoading, error}  = self.props;
+        const {isLoading, error, user}  = self.props;
 
         const siteTemplate = self.props.siteTemplate ? self.props.siteTemplate : {};
 
@@ -46,7 +48,9 @@ class SiteTemplate extends Component {
                                         <div className="col-md-5">
                                             <div className="product-images">
                                                 <div>
-                                                    {siteTemplate.imageUrl ? <img src={siteTemplate.imageUrl}/> : <div className="image-imitation">[IMAGE]</div>}
+                                                    {siteTemplate.imageUrl
+                                                        ? <img src={siteTemplate.imageUrl} style={{maxWidth: '365px'}}/>
+                                                        : <div className="image-imitation">[IMAGE]</div>}
                                                 </div>
                                             </div>
                                         </div>
@@ -73,16 +77,20 @@ class SiteTemplate extends Component {
                                                 <dt>Category</dt>
                                                 <dd>{siteTemplate.category}</dd>
                                             </dl>
+                                            {checkRole(user.roles, [Role.Admin, Role.Manager, Role.Developer]) &&
                                             <div className="text-right">
                                                 <div className="btn-group">
-                                                    <Link to={'/siteTemplates/' + siteTemplate.id + '/edit'} className="btn btn-white btn-sm">
+                                                    <Link to={'/siteTemplates/' + siteTemplate.id + '/edit'}
+                                                          className="btn btn-white btn-sm">
                                                         <i className="fa fa-gear"></i> Edit
                                                     </Link>
-                                                    <Button bsSize="sm" bsStyle="danger" data-toggle="modal" data-target="#confirmDeleteModal">
+                                                    <Button bsSize="sm" bsStyle="danger" data-toggle="modal"
+                                                            data-target="#confirmDeleteModal">
                                                         <i className="fa fa-trash"></i> Delete
                                                     </Button>
                                                 </div>
                                             </div>
+                                            }
                                         </div>
                                     </Row>
                                 </div>
@@ -101,10 +109,13 @@ class SiteTemplate extends Component {
 
 function mapStateToProps(state) {
     const { loading, item, error } = state.siteTemplates;
+    const { user } = state.authentication;
+
     return {
         isLoading: loading,
         siteTemplate: item,
-        error
+        error,
+        user
     }
 }
 

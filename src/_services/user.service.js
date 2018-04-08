@@ -10,7 +10,10 @@ export const userService = {
     register,
     logout,
     updateRole,
-    getAll
+    getAll,
+    findOne,
+    updateOne,
+    findOneFull,
 };
 
 function login(username, password) {
@@ -41,7 +44,7 @@ function login(username, password) {
             }
         })
         .then(id => {
-            return getOne(id).then(user => {
+            return findOne(id).then(user => {
                 if (user) {
                     localStorage.setItem('user', JSON.stringify(user));
                 }
@@ -75,13 +78,32 @@ function getAll() {
     return fetch(URL, requestOptions).then(handleResponse);
 }
 
-function getOne(id) {
+function findOne(id) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
     return fetch(URL + id, requestOptions).then(handleResponse);
+}
+
+function updateOne(entity) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: authJsonHeader(),
+        body: JSON.stringify(entity)
+    };
+
+    return fetch(URL + entity.id, requestOptions).then(handleResponse);
+}
+
+function findOneFull(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader(),
+    };
+
+    return fetch(URL + id + '/full', requestOptions).then(handleResponse);
 }
 
 function updateRole(id, roles) {

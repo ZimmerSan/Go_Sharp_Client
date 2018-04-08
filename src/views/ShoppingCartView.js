@@ -48,8 +48,10 @@ class ShoppingCartView extends Component {
                                                 <tbody>
                                                 <tr>
                                                     <td width="90">
-                                                        <div className="cart-product-imitation">
-                                                        </div>
+                                                        {rec.siteTemplate.imageUrl
+                                                            ? <img src={rec.siteTemplate.imageUrl} style={{width: '80px'}}/>
+                                                            : <div className="cart-product-imitation"/>
+                                                        }
                                                     </td>
                                                     <td className="desc">
                                                         <h3>

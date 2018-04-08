@@ -5,6 +5,8 @@ import SiteTemplateShort from "../../_components/partials/SiteTemplateShort";
 import {Link} from "react-router-dom";
 import {siteTemplateActions} from "../../_actions";
 import {connect} from "react-redux";
+import {checkRole} from "../../_helpers/index";
+import {Role} from "../../constants";
 
 const initialState = {
     siteTemplates: [],
@@ -34,7 +36,7 @@ class SiteTemplates extends Component {
     render() {
         let self = this;
 
-        const {isLoading, siteTemplates, error}  = self.props;
+        const {isLoading, siteTemplates, error, user}  = self.props;
 
         let rows = [];
         if (siteTemplates) {
@@ -53,7 +55,9 @@ class SiteTemplates extends Component {
             }
         }
 
-        let createBtn = <Link to={'/siteTemplates/create'} className="btn btn-primary"><i className="fa fa-plus-circle"/> Add new Template</Link>;
+        let createBtn = checkRole(user.roles, [Role.Admin, Role.Manager])
+            ? <Link to={'/siteTemplates/create'} className="btn btn-primary"><i className="fa fa-plus-circle"/> Add new Template</Link>
+            : undefined;
 
         return (
             [
@@ -69,10 +73,12 @@ class SiteTemplates extends Component {
 
 function mapStateToProps(state) {
     const { loading, items, error } = state.siteTemplates;
+    const { user } = state.authentication;
     return {
         isLoading: loading,
         siteTemplates: items,
-        error
+        error,
+        user
     }
 }
 

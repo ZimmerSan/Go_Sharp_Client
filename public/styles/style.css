@@ -3842,7 +3842,7 @@ body.body-small .footer.fixed {
 body.mini-navbar .branding {
   display: none;
 }
-img.circle-border {
+img.circle-border, div.circle-border {
   border: 6px solid #FFFFFF;
   border-radius: 50%;
 }
@@ -4640,7 +4640,7 @@ body.mini-navbar.fixed-sidebar .logo-element {
   padding: 20px;
   text-align: center;
 }
-.contact-box.center-version > a img {
+.contact-box.center-version > a img, div.profile-image-circle {
   width: 80px;
   height: 80px;
   margin-top: 10px;
@@ -5029,6 +5029,11 @@ a.compose-mail {
 }
 .profile-stats {
   margin-right: 10px;
+}
+.profile-image-circle {
+  display: inline-block;
+  background-position: center center;
+  background-size: cover;
 }
 .profile-image {
   width: 120px;
